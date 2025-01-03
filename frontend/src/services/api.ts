@@ -20,7 +20,10 @@ export const addNewItem = async (newItem: { name: String, description: String, p
     try {
         const response = await api.post('/', newItem);
         return response.data;
-    } catch (error) {
+    } catch (error: any) {
+        if (error.response.data.errors[0].message) {
+            throw error.response.data.errors[0].message;
+        }
         throw error
     }
 };
@@ -38,7 +41,10 @@ export const editItem = async (newItem: { name: String, description: String, pri
     try {
         const response = await api.put(`/${itemId}`, newItem);
         return response.data;
-    } catch (error) {
+    } catch (error: any) {
+        if (error.response.data.errors[0].message) {
+            throw error.response.data.errors[0].message;
+        }
         throw error;
     }
 }
