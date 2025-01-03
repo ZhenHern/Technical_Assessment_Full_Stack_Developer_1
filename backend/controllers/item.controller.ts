@@ -8,9 +8,6 @@ export const getAllItemsController = async (
 ) => {
     try {
         const items = await getAllItems();
-        if (!items?.length) {
-            res.status(404).json({ message: 'Item list is empty' });
-        }
         res.status(200).json(items);
         console.log("Done fetching all items");
     } catch (err) {
