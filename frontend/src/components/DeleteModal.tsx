@@ -16,13 +16,14 @@ function DeleteModal() {
                 dispatch(setItems(data));
                 dispatch(setShowDeleteModal(false));
                 dispatch(setItemToDelete(null));
+                message.success("Item has been successfully deleted.")
             }
             else {
-                message.error('No item to be deleted');
+                message.error("No item to be deleted.");
             }
         } catch (error) {
-            console.error('Error deleting item: ', error);
-            message.error('Error deleting item: ' + error);
+            console.error("Error deleting item: ", error);
+            message.error("Error deleting item: " + error);
         }
     }
 

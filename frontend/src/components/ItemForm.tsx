@@ -34,9 +34,10 @@ function ItemForm() {
             dispatch(setItems(data));
             dispatch(setShowForm(false));
             dispatch(setItemToEdit(null));
+            message.success("Item details have been successfully saved.")
         } catch (error) {
-            console.error('Error saving item: ', error);
-            message.error('Error saving item: ' + error);
+            console.error("Error saving item: ", error);
+            message.error("Error saving item: " + error);
         } finally {
             form.resetFields();
         }
