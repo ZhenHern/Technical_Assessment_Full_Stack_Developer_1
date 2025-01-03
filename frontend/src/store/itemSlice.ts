@@ -15,6 +15,7 @@ interface ItemsState {
     showDeleteModal: boolean;
     itemToDelete: Item | null;
     itemToEdit: Item | null;
+    connectionError: boolean;
 }
 
 const initialState: ItemsState = {
@@ -23,7 +24,8 @@ const initialState: ItemsState = {
     showForm: false,
     showDeleteModal: false,
     itemToDelete: null,
-    itemToEdit: null
+    itemToEdit: null,
+    connectionError: false
 }
 
 const itemsSlice = createSlice({
@@ -48,6 +50,9 @@ const itemsSlice = createSlice({
         setItemToEdit(state, action: PayloadAction<Item | null>) {
             state.itemToEdit = action.payload;
         },
+        setConnectionError(state, action: PayloadAction<boolean>) {
+            state.connectionError = action.payload;
+        },
     },
 });
 
@@ -58,6 +63,7 @@ export const {
     setShowDeleteModal,
     setItemToEdit,
     setItemToDelete,
+    setConnectionError
 } = itemsSlice.actions;
 
 export default itemsSlice.reducer;

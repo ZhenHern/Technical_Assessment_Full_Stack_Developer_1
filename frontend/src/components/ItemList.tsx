@@ -2,13 +2,13 @@ import { useEffect } from 'react';
 import { List, Button, message } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store/store';
-import { setItems, setLoading, setShowForm, setShowDeleteModal, setItemToDelete, setItemToEdit } from '../store/itemSlice';
+import { setItems, setLoading, setShowForm, setShowDeleteModal, setItemToDelete, setItemToEdit, setConnectionError } from '../store/itemSlice';
 import { getAllItems } from '../services/api';
 import ItemForm from './ItemForm';
 import DeleteModal from './DeleteModal';
 
 function ItemList() {
-    const { items, loading } = useSelector((state: RootState) => state.items);
+    const { items, loading, connectionError } = useSelector((state: RootState) => state.items);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -16,9 +16,11 @@ function ItemList() {
             try {
                 const data = await getAllItems();
                 dispatch(setItems(data));
+                dispatch(setConnectionError(false));
             } catch (error) {
                 console.error('Error fetching items: ', error);
                 message.error('Error fetching items: ' + error);
+                dispatch(setConnectionError(true));
             } finally {
                 dispatch(setLoading(false));
             }
@@ -72,6 +74,7 @@ function ItemList() {
                     dispatch(setItemToEdit(null))
                     dispatch(setShowForm(true))
                 }}
+                disabled={connectionError || loading}
             >
                 Add a new item
             </Button>
