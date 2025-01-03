@@ -1,6 +1,7 @@
 import express, { Express, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
+import { initializeTable } from './db';
 import itemRoute from "./routes/item.route";
 
 const app: Express = express();
@@ -20,6 +21,15 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   console.error(err.stack);
   res.status(500).send('Something broke!');
 });
+
+// Initialize database schema
+initializeTable()
+    .then(() => {
+        console.log('Database schema initialized successfully');
+    })
+    .catch((error) => {
+        console.error("Error when initializing database schema:", error);
+    });
 
 // Start server
 app.listen(port, () => {
