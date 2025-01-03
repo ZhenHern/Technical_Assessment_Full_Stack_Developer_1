@@ -1,16 +1,16 @@
-var mysql = require("mysql");
+var mysql = require("mysql2");
 
 export const pool  = mysql.createPool({
     connectionLimit: 10,
     host            : 'localhost',
-    user            : 'arkmind',
-    password        : 'arkmind123',
+    user            : 'root',
+    password        : 'password',
     database        : 'my_db'
 });
 
-const query = async (sql: string, params: any[] = []) => {
-    return new Promise<any[]>((resolve, reject) => {
-        pool.query(sql, params, (error: any, results: any[] | PromiseLike<any[]>) => {
+const query = async <T = any>(sql: string, params: any[] = []): Promise<T> => {
+    return new Promise<T>((resolve, reject) => {
+        pool.query(sql, params, (error: any, results: T) => {
             if (error) {
                 console.error('Error executing query:', error);
                 return reject(error);
@@ -18,7 +18,7 @@ const query = async (sql: string, params: any[] = []) => {
             resolve(results);
         });
     });
-};
+  };
 
 export const initializeTable = async () => {
     const createItemTableSQL = `
