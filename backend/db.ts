@@ -1,9 +1,10 @@
 var mysql = require("mysql2");
 
+// Please key according to your own user and password
 export const pool  = mysql.createPool({
     connectionLimit: 10,
     host            : 'localhost',
-    user            : 'root',
+    user            : 'root', 
     password        : 'password',
     database        : 'my_db'
 });
