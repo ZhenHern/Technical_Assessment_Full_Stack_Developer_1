@@ -1,45 +1,52 @@
 import { useEffect } from 'react';
-import { Modal, Form, Input, InputNumber, Button } from 'antd';
-import {Item} from './ItemList'
+import { Modal, Form, Input, InputNumber, Button, message } from 'antd';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../store/store';
+import { setItems, setShowForm, setItemToEdit} from '../store/itemSlice';
+import { getAllItems, addNewItem, editItem} from '../services/api';
 
-interface ItemFormProps {
-    visible: boolean;
-    onCancel: () => void;
-    onAddItem: (input: any) => void;
-    onEditItem: (input: any, id: number) => void;
-    item?: Item | null;
-}
-
-function ItemForm({ visible, onCancel, onAddItem, onEditItem, item }: ItemFormProps) {
+function ItemForm() {
+    const dispatch = useDispatch();
+    const { showForm, itemToEdit} = useSelector((state: RootState) => state.items);
     const [form] = Form.useForm();
     
     useEffect(() => {
-        if (item) {
+        if (itemToEdit) {
             form.setFieldsValue({
-                name: item.name,
-                description: item.description,
-                price: item.price
+                name: itemToEdit.name,
+                description: itemToEdit.description,
+                price: itemToEdit.price
             });
         } else {
             form.resetFields();
         }
-    }, [item, form]);
+    }, [itemToEdit, form]);
 
-    const handleSubmit = (input: any) => {
-        if (item) {
-            onEditItem(input, item.id);
+    const handleSubmit = async (input: any) => {
+        try {
+            if (itemToEdit) {
+                await editItem(input, itemToEdit.id);
+            }
+            else {
+                await addNewItem(input);
+            }
+            const data = await getAllItems();
+            dispatch(setItems(data));
+            dispatch(setShowForm(false));
+            dispatch(setItemToEdit(null));
+        } catch (error) {
+            console.error('Error saving item: ', error);
+            message.error('Error saving item: ' + error);
+        } finally {
+            form.resetFields();
         }
-        else {
-            onAddItem(input);
-        }
-        form.resetFields();
     };
 
     return (
         <Modal
-            title={item ? "Edit Item" : "Add a New Item"}
-            open={visible}
-            onCancel={onCancel}
+            title={itemToEdit ? "Edit Item" : "Add a New Item"}
+            open={showForm}
+            onCancel={() => dispatch(setShowForm(false))}
             centered 
             footer={null}
         >
