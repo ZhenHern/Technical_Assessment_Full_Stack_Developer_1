@@ -8,6 +8,38 @@ const api = axios.create({
 });
 
 export const getAllItems = async () => {
-    const response = await api.get('/');
-    return response.data;
+    try {
+        const response = await api.get('/');
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
 };
+
+export const addNewItem = async (newItem: { name: String, description: String, price: number}) => {
+    try {
+        const response = await api.post('/', newItem);
+        return response.data;
+    } catch (error) {
+        throw error
+    }
+};
+
+export const deleteItem = async (itemId: number) => {
+    try {
+        const response = await api.delete(`/${itemId}`);
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const editItem = async (newItem: { name: String, description: String, price: number}, itemId: number) => {
+    try {
+        const response = await api.put(`/${itemId}`, newItem);
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+}
+
